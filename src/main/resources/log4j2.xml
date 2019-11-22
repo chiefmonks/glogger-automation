@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn">
+	<Properties>
+		<Property name="log-path">logs</Property>
+	</Properties>
+	<Appenders>
+		<RollingFile name="infoRollingFile" fileName="${log-path}/auto.log"
+			filePattern="${log-path}/auto-%d{yyyy-MM-dd}-%i.log">
+			<PatternLayout>
+				<pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</pattern>
+			</PatternLayout>
+			<Policies>
+				<!-- SizeBasedTriggeringPolicy size="1 MB" / -->
+				<!-- Every 12 hours -->
+				<TimeBasedTriggeringPolicy interval="12" modulate="true"/>
+			</Policies>
+			<DefaultRolloverStrategy max="4" />
+			<filters>
+		            <!-- level range filter. we will create this filter in the next step -->
+		            <LevelRangeFilter minLevel="info" maxLevel="info" onMatch="ACCEPT" onMismatch="DENY" />
+			</filters>
+		</RollingFile>
+		<RollingFile name="errorRollingFile" fileName="${log-path}/error.log"
+			filePattern="${log-path}/error-%d{yyyy-MM-dd}-%i.log">
+			<PatternLayout>
+				<pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</pattern>
+			</PatternLayout>
+			<Policies>
+				<!-- SizeBasedTriggeringPolicy size="1 MB" / -->
+				<!-- Every 12 hours -->
+				<TimeBasedTriggeringPolicy interval="12" modulate="true"/>
+			</Policies>
+			<DefaultRolloverStrategy max="4" />
+			<filters>
+		            <!-- level range filter. we will create this filter in the next step -->
+		            <LevelRangeFilter minLevel="error" maxLevel="error" onMatch="ACCEPT" onMismatch="DENY" />
+			</filters>
+		</RollingFile>
+		<Console name="console" target="SYSTEM_OUT">
+			<PatternLayout
+				pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n" />
+		</Console>
+	</Appenders>
+	<Loggers>
+		 
+		<Logger name="com.glogger.automation" level="info" additivity="false">
+			<appender-ref ref="infoRollingFile" level="info" />
+			<appender-ref ref="errorRollingFile" level="error" />
+			<appender-ref ref="console" level="debug" />
+		</Logger>
+		
+		<Logger name="org.quartz" level="debug" additivity="false">
+			<appender-ref ref="infoRollingFile" level="info" />
+		</Logger>
+		
+		<Root level="info" additivity="false">
+			<!--  
+			<AppenderRef ref="infoRollingFile" />
+			<AppenderRef ref="errorRollingFile" />
+			-->
+			<AppenderRef ref="console" />
+		</Root>
+	</Loggers>
+</Configuration>
